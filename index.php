@@ -6,7 +6,6 @@ if(!isset($_SESSION['login'])){
 
 header("Location: login.php");
 
-
 exit;
 
 }
@@ -25,7 +24,21 @@ exit;
 Beauty & Skincare
 </div>
 
+<form method="GET" class="search-box">
+
+<input type="text"
+name="cari"
+placeholder="Cari jenis produk...">
+
+<button type="submit">
+🔍
+</button>
+
+</form>
+
 <div class="container">
+
+<div class="top">
 
 <a href="tambah.php" class="btn">
 + Tambah Produk
@@ -35,15 +48,25 @@ Beauty & Skincare
 Logout
 </a>
 
-<br><br><br>
+</div>
 
 <div class="card-container">
-
 <?php
+
+if(isset($_GET['cari'])){
+
+$cari = $_GET['cari'];
+
+$data = mysqli_query($conn,
+"SELECT * FROM skincare
+WHERE jenis_produk LIKE '%$cari%'");
+
+}else{
 
 $data = mysqli_query($conn,
 "SELECT * FROM skincare");
 
+}
 while($d = mysqli_fetch_array($data)){
 
 ?>
@@ -74,15 +97,11 @@ Harga
 Rp <?php echo $d['harga']; ?>
 </p>
 
-<div class="label">
-Manfaat
-</div>
-
-<p>
-<?php echo $d['manfaat']; ?>
-</p>
-
 <div class="aksi">
+
+<a href="detail.php?id=<?php echo $d['id']; ?>">
+Detail
+</a>
 
 <a href="edit.php?id=<?php echo $d['id']; ?>" class="edit">
 Edit
